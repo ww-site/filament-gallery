@@ -5,8 +5,7 @@ Reusable Filament 5 gallery plugin built around two simple ideas:
 - a `media_sources` entity describing where files live (disk + directory)
 - a set of Filament UI primitives to upload, browse, pick and display those files
 
-This is a local Composer path package that the host project consumes via
-`composer.json` `repositories` as `type: path`.
+Install from [Packagist](https://packagist.org/packages/ww-site/filament-gallery) or via a Composer `path` repository during local development.
 
 - **Package:** `ww-site/filament-gallery`
 - **Namespace:** `WwGallery\FilamentGallery\`
@@ -53,6 +52,30 @@ This is a local Composer path package that the host project consumes via
    php artisan vendor:publish --tag=filament-gallery-config
    php artisan vendor:publish --tag=filament-gallery-translations
    ```
+
+### Filament admin theme & Tailwind (styling)
+
+Filament 5 builds the panel CSS with **Vite** and **Tailwind CSS v4**. Your panel `theme.css` only includes utilities for files listed in `@source` directives. This package ships **Blade views** and **HTML built from PHP** (e.g. gallery thumbnails inside the MediaPicker modal). If you do not extend Tailwind’s content paths, those screens look unstyled (oversized images, missing layout).
+
+In your host app, open the Filament theme file you pass to `->viteTheme(...)` (for example `resources/css/filament/admin/theme.css`) and add **both** lines (paths are relative to that file; adjust if your theme lives elsewhere):
+
+```css
+/* Package Blade views */
+@source '../../../../vendor/ww-site/filament-gallery/resources/views/**/*';
+
+/* Tailwind classes inside PHP (HtmlString labels, etc.) */
+@source '../../../../vendor/ww-site/filament-gallery/src/**/*.php';
+```
+
+Then rebuild assets:
+
+```bash
+npm run build
+# or during development:
+npm run dev
+```
+
+After every `composer update ww-site/filament-gallery`, run the build again if the package added or changed Tailwind classes.
 
 ## Usage
 
@@ -120,9 +143,31 @@ FilamentGalleryPlugin::make()
 Package ships with `en` and `ru`. Add your own by publishing translations and
 editing `lang/vendor/filament-gallery/<locale>/filament-gallery.php`.
 
+## Testing
+
+Automated tests live in this package (PHPUnit + [Orchestra Testbench](https://github.com/orchestral/testbench)). They are **not** installed in host applications — only `require-dev` when you work on the package itself.
+
+From the package root (e.g. a git clone or your monorepo `packages/ww-gallery`):
+
+```bash
+composer update
+composer test
+```
+
+`composer test` runs `phpunit` using `phpunit.xml.dist`.
+
+**What is covered today:**
+
+- `MediaSource` — settings, `getDisk()` / `getDirectory()`, defaults
+- `MediaSourceBrowserService` — listing, image filter, upload, delete with path prefix rules
+- `FilamentGalleryPlugin` — stable plugin id
+
+Contributors: add cases under `tests/Unit/` and keep `declare(strict_types=1);` on new files.
+
 ## Roadmap
 
 - lightbox/viewer for the gallery page
 - multi-file MediaPicker mode
 - per-source policies / authorization hooks
 - PSR-4 autodiscovery inside the panel provider
+- broader Filament/Livewire feature tests (optional)

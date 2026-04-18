@@ -30,9 +30,18 @@
         "illuminate/database": "^12.0",
         "illuminate/support": "^12.0"
     },
+    "require-dev": {
+        "orchestra/testbench": "^10.0",
+        "phpunit/phpunit": "^11.5"
+    },
     "autoload": {
         "psr-4": {
             "WwGallery\\FilamentGallery\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WwGallery\\FilamentGallery\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -43,5 +52,12 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {}
+    }
 }

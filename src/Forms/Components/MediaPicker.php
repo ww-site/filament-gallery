@@ -9,6 +9,7 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\GridDirection;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
@@ -152,7 +153,10 @@ final class MediaPicker extends Field
                     ->options(fn (): array => $component->getGalleryOptions())
                     ->allowHtml()
                     ->required()
-                    ->maxItems(1),
+                    ->maxItems(1)
+                    ->columns(3)
+                    ->gridDirection(GridDirection::Row)
+                    ->searchable(),
             ])
             ->action(function (array $data, self $component): void {
                 $selectedPath = $data['selection'][0] ?? null;
@@ -237,13 +241,27 @@ final class MediaPicker extends Field
         $options = [];
 
         foreach ($files as $file) {
-            $options[$file['path']] = new HtmlString(sprintf(
-                '<div class="flex items-center gap-3"><img src="%s" alt="%s" class="h-14 w-14 rounded-xl object-cover"><div class="min-w-0"><div class="truncate font-medium">%s</div><div class="truncate text-xs text-gray-500">%s</div></div></div>',
-                e($file['url']),
-                e($file['name']),
-                e($file['name']),
-                e($file['path']),
-            ));
+            $url = e($file['url']);
+            $name = e($file['name']);
+            $path = e($file['path']);
+
+            // Важно: часть классов задаётся в PHP-строке — Tailwind может их не подхватить;
+            // для превью обязательны inline-размеры, иначе <img> тянется на натуральный размер.
+            $options[$file['path']] = new HtmlString(
+                '<div class="filament-gallery-picker-option w-full max-w-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm ring-1 ring-gray-950/5 dark:border-white/10 dark:bg-gray-950/40 dark:ring-white/10">'
+                . '<div class="flex flex-col gap-3 p-3 sm:flex-row sm:items-center">'
+                . '<div class="relative shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-white/5" style="width:5rem;height:5rem">'
+                . '<img src="' . $url . '" alt="' . $name . '" width="80" height="80" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block" />'
+                . '</div>'
+                . '<div class="min-w-0 flex-1 space-y-1">'
+                . '<div class="break-words text-sm font-medium text-gray-950 dark:text-white">' . $name . '</div>'
+                . '<div class="text-xs text-gray-500 dark:text-gray-400" title="' . $path . '">'
+                . '<span class="line-clamp-2 break-all">' . $path . '</span>'
+                . '</div>'
+                . '</div>'
+                . '</div>'
+                . '</div>',
+            );
         }
 
         return $options;
