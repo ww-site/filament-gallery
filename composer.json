@@ -1,0 +1,47 @@
+{
+    "name": "ww-site/filament-gallery",
+    "homepage": "https://github.com/ww-site/filament-gallery",
+    "support": {
+        "issues": "https://github.com/ww-site/filament-gallery/issues",
+        "source": "https://github.com/ww-site/filament-gallery"
+    },
+    "keywords": [
+        "filament",
+        "filamentphp",
+        "laravel",
+        "gallery",
+        "media",
+        "file-upload"
+    ],
+    "description": "Reusable Filament gallery plugin for media source browsing and picking.",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Goncharov Stepan",
+            "email": "in001@z1q.ru",
+            "homepage": "https://wwsite.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "filament/filament": "^5.5",
+        "illuminate/contracts": "^12.0",
+        "illuminate/database": "^12.0",
+        "illuminate/support": "^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "WwGallery\\FilamentGallery\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "WwGallery\\FilamentGallery\\FilamentGalleryServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
