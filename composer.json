@@ -35,6 +35,9 @@
         "phpunit/phpunit": "^11.5"
     },
     "autoload": {
+        "files": [
+            "src/Support/helpers.php"
+        ],
         "psr-4": {
             "WwGallery\\FilamentGallery\\": "src/"
         }

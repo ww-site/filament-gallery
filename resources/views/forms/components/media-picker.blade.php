@@ -7,7 +7,7 @@
 <x-dynamic-component :component="$fieldWrapperView" :field="$field">
     <div class="space-y-4">
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-white/10 dark:bg-white/5">
-            <div class="aspect-square bg-gray-50 dark:bg-white/5">
+            <div class="h-[250px] bg-gray-50 dark:bg-white/5">
                 @if (filled($previewUrl))
                     <img
                         src="{{ $previewUrl }}"
