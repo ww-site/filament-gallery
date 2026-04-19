@@ -6,6 +6,7 @@ namespace WwGallery\FilamentGallery\Services;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 use WwGallery\FilamentGallery\Models\MediaSource;
 
 final class MediaSourceBrowserService
@@ -86,7 +87,29 @@ final class MediaSourceBrowserService
             return;
         }
 
-        Storage::disk($disk)->delete($filteredPaths);
+        foreach ($filteredPaths as $path) {
+            Storage::disk($disk)->delete($path);
+            $this->deleteLocalFallback($disk, $path);
+        }
+    }
+
+    private function deleteLocalFallback(string $disk, string $path): void
+    {
+        $storage = Storage::disk($disk);
+
+        try {
+            if (! $storage->exists($path)) {
+                return;
+            }
+
+            $localPath = $storage->path($path);
+
+            if (is_file($localPath)) {
+                @unlink($localPath);
+            }
+        } catch (Throwable) {
+            return;
+        }
     }
 
     private static function resolveFileType(string $path): string
