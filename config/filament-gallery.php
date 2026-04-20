@@ -24,4 +24,12 @@ return [
         ],
         'max_upload_size' => 10240,
     ],
+    'image' => [
+        'cache_disk' => 'public',
+        'cache_directory' => 'filament-gallery/cache',
+        'default_quality' => 85,
+        'default_format' => 'webp',
+        'default_crop' => false,
+        'default_background' => 'ffffff',
+    ],
 ];

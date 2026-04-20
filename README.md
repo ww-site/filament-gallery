@@ -122,12 +122,28 @@ MediaPreviewEntry::make('image')
     ->mediaSourceSlug('category-images');
 ```
 
+### Render a resized image URL
+
+```php
+media_source_image('slider-images', $path, [
+    'width' => 1200,
+    'height' => 600,
+    'format' => 'webp',
+    'quality' => 85,
+    'crop' => true,
+]);
+```
+
+If only `width` or only `height` is passed, the helper keeps the original image ratio.
+
 ## Configuration
 
 Default config is in `config/filament-gallery.php`:
 
 - `page.accepted_file_types` / `page.max_upload_size` — uploads on the gallery page
 - `picker.accepted_file_types` / `picker.max_upload_size` — uploads via the MediaPicker
+- `image.cache_disk` / `image.cache_directory` — where resized images are cached
+- `image.default_quality` / `image.default_format` / `image.default_crop` — default image processing options
 - `register_gallery_page` / `register_media_sources_resource` — toggles to hide pieces from a panel
 
 Per-panel overrides live on the plugin:
